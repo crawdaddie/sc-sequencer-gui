@@ -103,7 +103,6 @@ SequenceableCanvasObject : CanvasObject {
       this.resolveProps;
     });
     canvasProps.addDependant(props);
-
     this.addListeners(item);
 	}
 
@@ -145,8 +144,6 @@ SequenceableCanvasObject : CanvasObject {
 
   renderView { arg props, canvasProps;
     var renderBounds = props.renderBounds;
-    // this.renderBounds(item, canvasProps.origin, canvasProps.zoom);
-
 		if (renderBounds.intersects(canvasProps.canvasBounds).not) { ^false };
 
 		Pen.smoothing = true;
@@ -166,14 +163,18 @@ SequenceableCanvasObject : CanvasObject {
   onDragStart {
     props.initialBounds = props.renderBounds;
   }
-  getMouseAction { arg aMouseAction/*: (
-    modifiers: Number, 
-    initialPosition: Point,
-    mouseDelta: Point,
-    position: Point,
-    mouseMoveAction: Function,
-    mouseUpAction: Function
-  ) */;
+  getMouseAction { arg aMouseAction
+  /*
+  * (
+  *  modifiers: Number, 
+  *  initialPosition: Point,
+  *  mouseDelta: Point,
+  *  position: Point,
+  *  mouseMoveAction: Function,
+  *  mouseUpAction: Function
+  * )
+  */
+    ;
     var initialPosition = aMouseAction.initialCanvasPosition;
     var modifiers = aMouseAction.modifiers;
     var renderBounds = props.renderBounds;
@@ -218,14 +219,18 @@ SequenceableCanvasObject : CanvasObject {
     ).contains(aPoint)
   }
   
-  dragProps { arg aMouseAction /*: (
-    modifiers: Number, 
-    initialPosition: Point,
-    mouseDelta: Point,
-    position: Point,
-    mouseMoveAction: Function,
-    mouseUpAction: Function
-  ) */;
+  dragProps { arg aMouseAction
+  /*
+  * (
+  *  modifiers: Number, 
+  *  initialPosition: Point,
+  *  mouseDelta: Point,
+  *  position: Point,
+  *  mouseMoveAction: Function,
+  *  mouseUpAction: Function
+  * )
+  */
+    ;
     var renderBounds = this.renderBounds(item, canvasProps.origin, canvasProps.zoom);
 		var delta = aMouseAction.mouseDelta;
 		

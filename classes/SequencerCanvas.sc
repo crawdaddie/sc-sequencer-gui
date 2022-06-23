@@ -143,7 +143,7 @@ SequencerCanvas {
 
   getItemEmbedView { arg item;
     if (item.type == 'soundfile' || item.soundfile.notNil) {
-      if (item.soundfile.notNil, { Mod(item.soundfile, 'soundfile') });
+      // if (item.soundfile.notNil, { Mod(item.soundfile, 'soundfile') });
       ^SoundfileCanvasObject;
     };
     if (item.class == Store) {

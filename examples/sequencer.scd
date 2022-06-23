@@ -31,12 +31,47 @@
 
 
 
+
 ~seq = ~getStore.();
 ~seqGui = SequencerCanvas(~seq);
-~seq.addObject((beats: 1, a: 1, row: 0, sustain: 1))
+
+~clapsf = Import("./Clap.wav", loader: 'soundfile');
+~seq.addObject((beats: 1, a: 1, row: 0, sustain: 1));
+~seq.addObject((beats: 3, a: 1, row: 0, sustain: 1, soundfile: ~clapsf, startPos: 0));
 )
 
-~seqGui.zoomBy(1.1, 1)
+~clapsf.soundfile.readData()
+~clapsf.getData
+
+h = Dictionary()
+
+h.put("./Clap.wav:1,1", ())
+
+h.at("./Clap.wav:1.1")
+
+h.at("./Clap.wav:1,1")
+
+h
+(
+h = [1,2,3];
+
+j = { arg ref;
+  ref[0] = 5;
+};
+)
+
+
+h
+
+j.(h)
+h
+
+
+~clapsf
+
+
+Soundfile
+~seqGui.zoomBy(2, 0.3)
 
 ~seq
 
@@ -67,3 +102,26 @@
 
 ~seq.get('addObject')
 ~seq.addObject((a: 1))
+
+Quarks.install("~/projects/sc/sc-lsp")
+
+Quarks.install("https://github.com/scztt/log.quark");
+s.boot;
+
+4.postln;
+'soundfile'.import;
+~soundfile
+sb
+Quarks.gui;
+
+Log
+
+{ SinOsc.ar(100)!2}.play;
+
+
+~clapsf = Import("./Clap.wav", loader: 'soundfile')
+~clap
+
+
+
+Quarks.install("https://github.com/scztt/Deferred.quark")
