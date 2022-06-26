@@ -8,18 +8,19 @@ Waveform {
   *new { arg 
       data, /* -> pointer to raw soundfile data */
       soundfile, /* -> Soundfile */
-      zoom = 1 
+      zoom = 1,
+      cb 
     ;
     var id = format("%:%", soundfile.path, zoom);
     var wf = all.at(id);
     if (wf.notNil, {
       ^wf;
     }, {
-      ^super.new.init(data, soundfile, zoom)
+      ^super.new.init(data, soundfile, zoom, cb)
     });
   }
 
-  init { arg rawdata, soundfile, zoom;
+  init { arg rawdata, soundfile, zoom, cb;
     var id = format("%:%", soundfile.path, zoom);
     var horizontalUnit = Theme.horizontalUnit;
     var bufRateScale = soundfile.sampleRate / Server.default.sampleRate;
@@ -29,13 +30,13 @@ Waveform {
     var wfTask;
     data = rawdata;
     array = Array.fill(chunks, [0,0]);
-    wfTask = this.computeWaveform(array, rawdata);
+    wfTask = this.computeWaveform(array, rawdata, cb);
     wfTask.start(AppClock);
 
     all.put(id, this);
   }
 
-  computeWaveform { arg array, rawArray;
+  computeWaveform { arg array, rawArray, cb;
     var chunks = array.size;
     var chunkSize = (rawArray.size / chunks).asInteger;
     ^Task({
@@ -50,7 +51,8 @@ Waveform {
           minVal = min(minVal, data);
         };
 			  array[index] = [maxVal, minVal];
-      }
+      };
+      cb.value();
     })
   }
 

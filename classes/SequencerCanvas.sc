@@ -21,26 +21,64 @@ SequencerCanvas {
 		^super.new.init(store, timingContext, parent);
 	}
 
-  addObject { arg item;
-    var viewClass = this.getItemEmbedView(item);
-    var view = viewClass.new(item, props);
-    views = views.add(view);
-    canvas.refresh;
+  addObject { arg payload;
+    "add object canvas".postln;
+    payload.postln;
+    // var viewClass = this.getItemEmbedView(item);
+    // var view = viewClass.new(item, props);
+    // views = views.add(view);
+    // canvas.refresh;
+  }
+
+  updateObject { arg payload;
+    "update object canvas".postln;
+    payload.postln;
+    // var id, obj, v;
+    // #id, obj = payload;
+    // v = block {|break|
+    //   views.do { arg v;
+    //     if (v.id == id) {
+    //       break.value(v)
+    //     };
+    //   }
+    // };
+    // v.setItem(obj);
+    // canvas.refresh;
   }
 
   removeObject {
   }
 
+  listen { arg type;
+    Dispatcher.addListener(
+      type, 
+      this,
+      { |p|
+        if (p.id == store.id) {
+          this.perform(type, p);
+        } 
+      }
+    );
+  }
+
+
   addListeners { arg object;
-    object.addDependant(this);
+    this.listen('addObject');
+    this.listen('updateObject');
+    this.listen('removeObject');
+ 			//     , { arg payload;
+			//       var item = payload.object;
+			//       var viewClass = this.getItemEmbedView(item);
+			// var view = viewClass.new(item, props);
+			//       views = views.add(view);
+			//       canvas.refresh();
+			//     });
+			//
+			//     this.listen(Topics.objectDeleted, { arg payload;
+			//       views = views.select({ arg view; view.id != payload.objectId });
+			//       canvas.refresh();
+			//     });
   }
-
-  update { arg object, changer ... args;
-    var action, payload;
-    #action, payload = args;
-    this.perform(action, payload)
-  }
-
 
   front {
     canvas.front;
@@ -70,13 +108,13 @@ SequencerCanvas {
 			zoom: 1@1,
 			redraw: { canvas.refresh; },
 			canvasBounds: canvas.parent.bounds,
-		)).onUpdate_({ this.propagateProps });
+		));
 
 		canvas.onResize = { arg c;
 			props.canvasBounds = c.parent.bounds;
 		};
 		
-		this.addChildViews(store.values.select(_.beats.notNil));
+		this.addChildViews(store.values.select(_.time.notNil));
 
 		this.connectKeyActions;
 		this.connectMouseActions;
@@ -134,7 +172,7 @@ SequencerCanvas {
 		point = (point + Point(-1 * origin.x, -1 * origin.y)) * Point(zoom.x.reciprocal, zoom.y.reciprocal);
 
 		itemParams = (
-			beats: (point.x / xFactor).round(1),
+			time: (point.x / xFactor).round(1),
 			row: (point.y / yFactor).round(1),
 			//sustain: bounds.width / xFactor
 		);
@@ -142,8 +180,7 @@ SequencerCanvas {
   }
 
   getItemEmbedView { arg item;
-    if (item.type == 'soundfile' || item.soundfile.notNil) {
-      // if (item.soundfile.notNil, { Mod(item.soundfile, 'soundfile') });
+    if (item.type == 'soundfile' || item.soundfile.notNil || item.soundfileRef.notNil) {
       ^SoundfileCanvasObject;
     };
     if (item.class == Store) {
@@ -156,17 +193,17 @@ SequencerCanvas {
   getContextMenuActions { arg mouseAction, clipboard;
     var pasteActions = if (clipboard.size != 0, {
       [
-          MenuAction.separator,
-          MenuAction("paste", {
-            clipboard.do { arg view;
-              view.copyTo(mouseAction.initialCanvasPosition, store);
-            }
-          }),
-          MenuAction("paste linked", {
-            clipboard.do { arg view;
-              // view.copyTo(mouseAction.initialCanvasPosition, store, link: true);
-            }
-          })
+        MenuAction.separator,
+        MenuAction("paste", {
+          clipboard.do { arg view;
+            view.copyTo(mouseAction.initialCanvasPosition, store);
+          }
+        }),
+        MenuAction("paste linked", {
+          clipboard.do { arg view;
+            // view.copyTo(mouseAction.initialCanvasPosition, store, link: true);
+          }
+        })
       ]
     }, {[]});
     ^[
@@ -277,22 +314,10 @@ SequencerCanvas {
 		props.origin = (props.origin.x + x)@(props.origin.y + y);
 		canvas.refresh;
 	}
-
-  propagateProps {
-    // views.do { arg v;
-    //   v.resolveProps;
-    // };
-  }
-
   incrementQuantSubdivision { arg increment;
     props.quantSubdivisions = max(1, props.quantSubdivisions + increment);
-
-
-
-
     canvas.refresh;
   }
-
   play {
     store.play;
   }

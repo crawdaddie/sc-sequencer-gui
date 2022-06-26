@@ -1,0 +1,10 @@
+(
+          name: "SC Sequencer GUI",
+       summary: "gui for dictionary containing events",
+        author: "adam.a.juraszek@googlemail.com",
+       version: "0.0.1",
+        schelp: "",
+          test: "",
+           url: "https://github.com/crawdaddie/sc-sequencer-gui",
+  dependencies: [],
+)
