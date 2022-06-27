@@ -4,7 +4,9 @@ CanvasObject {
   onClose {
 		Dispatcher.removeListenersForObject(this)
 	}
+
   onDragStart { arg aMouseAction;
+
   }
 
 	onDrag { arg aMouseAction;
@@ -133,12 +135,6 @@ SequenceableCanvasObject : CanvasObject {
   }
 
   addObject { arg payload;
-    "add object rect".postln;
-    payload.postln;
-    // var viewClass = this.getItemEmbedView(item);
-    // var view = viewClass.new(item, props);
-    // views = views.add(view);
-    // canvas.refresh;
   }
 
   updateObject { arg payload;
@@ -154,7 +150,8 @@ SequenceableCanvasObject : CanvasObject {
       type, 
       this,
       { |p|
-        if (p.id == item.id) { // item.id will remain stable throughout the underlying objects lifecycle
+        if (p.id == item.id) {
+          // item.id will remain stable throughout the underlying objects lifecycle
           // even if an object is 'updated' in an immutable way
           this.perform(type, p);
         } 

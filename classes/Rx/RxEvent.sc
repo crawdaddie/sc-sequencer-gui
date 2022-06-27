@@ -22,7 +22,6 @@ RxEvent : Event {
   // instead they can subscribe just to updates for this instance's _ID_ , which will remain stable throughout
   // rather than itself
   // will simplify subscribers needing to remove their listeners for GC
-    [key, originalValue, value].postln;
 
     if (originalValue.isNil && value.notNil) {
       ^this.dispatch(\addObject, (id: this.id, object: value));

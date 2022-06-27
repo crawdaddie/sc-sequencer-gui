@@ -52,7 +52,6 @@ SequencerGrid {
 		while ({ subOffset < canvasBounds.width }) {
 			Pen.line(Point(subOffset, 0), Point(subOffset, canvasBounds.height));
 			
-			// [tickNum, subOffset, minorGap].postln;
 			subOffset = subOffset + minorGap;
 			// tickNum = tickNum + 1;
 		}; 

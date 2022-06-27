@@ -30,8 +30,8 @@ SequencerCanvas {
   }
 
   updateObject { arg payload;
-    "update object canvas".postln;
-    payload.postln;
+    // "update object canvas".postln;
+    // payload.postln;
     // var id, obj, v;
     // #id, obj = payload;
     // v = block {|break|
@@ -195,7 +195,6 @@ SequencerCanvas {
         MenuAction.separator,
         MenuAction("paste", {
           clipboard.do { arg view;
-            view.postln;
             view.copyTo(mouseAction.initialCanvasPosition, store);
           }
         }),
