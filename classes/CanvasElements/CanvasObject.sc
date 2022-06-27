@@ -358,7 +358,7 @@ SequenceableCanvasObject : CanvasObject {
       )
     );
     itemParams = this.getItemParams(newProps);
-    store.addObject(itemParams);
+    store.add(itemParams);
   }
 
 	onDragEnd { arg aMouseAction;

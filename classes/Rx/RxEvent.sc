@@ -25,7 +25,7 @@ RxEvent : Event {
     [key, originalValue, value].postln;
 
     if (originalValue.isNil && value.notNil) {
-      ^this.dispatch(\addObject, (id: this.id, object: this));
+      ^this.dispatch(\addObject, (id: this.id, object: value));
     };
 
     if (originalValue.notNil && value.isNil) {

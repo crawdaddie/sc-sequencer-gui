@@ -22,12 +22,11 @@ SequencerCanvas {
 	}
 
   addObject { arg payload;
-    "add object canvas".postln;
-    payload.postln;
-    // var viewClass = this.getItemEmbedView(item);
-    // var view = viewClass.new(item, props);
-    // views = views.add(view);
-    // canvas.refresh;
+    var item = payload.object;
+    var viewClass = this.getItemEmbedView(item);
+    var view = viewClass.new(item, props);
+    views = views.add(view);
+    canvas.refresh;
   }
 
   updateObject { arg payload;
@@ -196,6 +195,7 @@ SequencerCanvas {
         MenuAction.separator,
         MenuAction("paste", {
           clipboard.do { arg view;
+            view.postln;
             view.copyTo(mouseAction.initialCanvasPosition, store);
           }
         }),
