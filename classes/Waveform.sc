@@ -30,13 +30,12 @@ Waveform {
     var wfTask;
     data = rawdata;
     array = Array.fill(chunks, [0,0]);
-    wfTask = this.computeWaveform(array, rawdata, cb);
+    wfTask = this.getWaveformComputation(array, rawdata, cb);
     wfTask.start(AppClock);
-
     all.put(id, this);
   }
 
-  computeWaveform { arg array, rawArray, cb;
+  getWaveformComputation { arg array, rawArray, cb;
     var chunks = array.size;
     var chunkSize = (rawArray.size / chunks).asInteger;
     ^Task({
