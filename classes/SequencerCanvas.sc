@@ -1,13 +1,11 @@
 SequencerCanvas {
 	var <canvas;
 	var props; 
-
 	/**
 	 * (
 	 *   quantX: 100, // number in px
 	 *	 origin: 0@0, // point - represents where the 'current' viewport is
-	 *	 timingOffset: 0, // at which 'global' offset is the represented collection of events
-	 *	 zoom: 1@1, // point
+	 *	 timingOffset: 0, // at which 'global' offset is the represented collection of events zoom: 1@1, // point
 	 * );
 	 */
 
@@ -107,6 +105,7 @@ SequencerCanvas {
 			zoom: 1@1,
 			redraw: { canvas.refresh; },
 			canvasBounds: canvas.parent.bounds,
+      showEnvelopes: false
 		));
 
 		canvas.onResize = { arg c;
@@ -198,23 +197,25 @@ SequencerCanvas {
             view.copyTo(mouseAction.initialCanvasPosition, store);
           }
         }),
-        MenuAction("paste linked", {
-          clipboard.do { arg view;
-            // view.copyTo(mouseAction.initialCanvasPosition, store, link: true);
-          }
-        })
       ]
     }, {[]});
     ^[
-      Menu(
-        MenuAction("sub"),
-        MenuAction("menu"),
-      ).title_("add item")
+      // Menu(
+      //   MenuAction("sub"),
+      //   MenuAction("menu"),
+      // ).title_("add item")
     ] ++ pasteActions;
   }
 
 	connectKeyActions {
-    // var keyActionManager = CanvasKeyActionManager(this, ProjectKeyActionManager());
+    canvas.keyDownAction = { | view, char, mod, unicode, keycode, key |
+      // [keycode, mod].postln;
+      switch ([keycode, mod])
+        { [ 27, 1179648 ] } { this.zoomBy(1.05.reciprocal, 1.05.reciprocal) } // zoom out
+        { [ 24, 1179648 ] } { this.zoomBy(1.05, 1.05) } // zoom in
+        // { [ 14, 1048576 ] } { this.toggleEnvelopes }
+      ;
+    }
 	}
 
 	connectMouseActions {
@@ -235,7 +236,10 @@ SequencerCanvas {
           canvas.setContextMenuActions(
             MenuAction(
               "copy",
-              { clipboard = selected }
+              {
+                clipboard = selected;
+                // "echo \"%\" | pbcopy".format(selected.id).unixCmd;
+              }
             ),
             MenuAction(
               "delete",
@@ -248,6 +252,7 @@ SequencerCanvas {
             view.select;
             view.onDragStart;
           });
+
           baseAction = ( modifiers: modifiers,
 						initialPosition: position,
             initialCanvasPosition: initialCanvasPosition,
@@ -313,13 +318,19 @@ SequencerCanvas {
 		props.origin = (props.origin.x + x)@(props.origin.y + y);
 		canvas.refresh;
 	}
+
   incrementQuantSubdivision { arg increment;
     props.quantSubdivisions = max(1, props.quantSubdivisions + increment);
     canvas.refresh;
   }
+  toggleEnvelopes {
+    props.showEnvelopes = props.showEnvelopes.not;
+  }
+
   play {
     store.play;
   }
+
   close {
     canvas.parent.close;
   }

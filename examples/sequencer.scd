@@ -30,4 +30,3 @@ currentEnvironment
 
 ~items.time.notNil
 
-currentEnvironment.keys

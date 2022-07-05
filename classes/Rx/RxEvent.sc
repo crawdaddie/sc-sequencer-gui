@@ -53,7 +53,7 @@ RxEvent : Event {
 			super.put(key, value);
 		};
 
-    if (dispatch) {
+    if (dispatch && updates.size > 0) {
       this.dispatch(\updateObject, (id: this.id, object: this));
     };
 	}
