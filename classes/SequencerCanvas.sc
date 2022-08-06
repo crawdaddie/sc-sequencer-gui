@@ -15,8 +15,8 @@ SequencerCanvas {
 
   var store;
 
-	*new { arg store, timingContext = (bpm: 60), parent;
-		^super.new.init(store, timingContext, parent);
+	*new { arg store, timingContext = (bpm: 60), parent, pianoRoll = false;
+		^super.new.init(store, timingContext, parent, pianoRoll);
 	}
 
   addObject { arg payload;
@@ -81,7 +81,7 @@ SequencerCanvas {
     canvas.front;
   }
 
-	init { arg aStore, timingContext, aParent;
+	init { arg aStore, timingContext, aParent, pianoRoll = false;
 		var parent, bounds;
 		var title = format("sequencer - %", aStore.id);
     store = aStore;
@@ -105,7 +105,8 @@ SequencerCanvas {
 			zoom: 1@1,
 			redraw: { canvas.refresh; },
 			canvasBounds: canvas.parent.bounds,
-      showEnvelopes: false
+      showEnvelopes: false,
+      pianoRoll: pianoRoll,
 		));
 
 		canvas.onResize = { arg c;

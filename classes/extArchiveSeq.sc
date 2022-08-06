@@ -12,6 +12,10 @@
 		}
 	}
 
+  serialize {
+    
+  }
+
 
 	asMinifiedTextArchive {
 		var objects, list, stream, firsttime = true;

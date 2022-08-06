@@ -6,5 +6,5 @@
         schelp: "",
           test: "",
            url: "https://github.com/crawdaddie/sc-sequencer-gui",
-  dependencies: [],
+  dependencies: ["https://github.com/crawdaddie/sc-project-framework"],
 )

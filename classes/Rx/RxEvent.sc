@@ -22,6 +22,7 @@ RxEvent : Event {
   // instead they can subscribe just to updates for this instance's _ID_ , which will remain stable throughout
   // rather than itself
   // will simplify subscribers needing to remove their listeners for GC
+    var originalVals = ();
 
     if (originalValue.isNil && value.notNil) {
       ^this.dispatch(\addObject, (id: this.id, object: value));
@@ -30,23 +31,26 @@ RxEvent : Event {
     if (originalValue.notNil && value.isNil) {
       ^this.dispatch(\removeObject, (id: this.id) ++ (removedKey: key) );
     };
+    originalVals.put(key, originalValue);
 
-    ^this.dispatch(\updateObject, (id: this.id, object: this));
+    ^this.dispatch(\updateObject, (id: this.id, object: this, originalValues: originalVals));
   }
 
 	put { arg key, value, dispatch = true;
     var originalValue = this.at(key);
     super.put(key, value);
-    this.postln;
     if (dispatch && (originalValue != value)) { this.broadcastUpdate(key, originalValue, value) };
 		^this;
 	}
 
 	putAll { arg dictionary, dispatch = true;
 		var updates = ();
+    var originalVals = ();
 
 		dictionary.keysValuesDo { arg key, value;
-			if (this.at(key) != value) {
+      var originalVal = this.at(key);
+			if (originalVal != value) {
+        originalVals.put(key, originalVal);
 				updates.put(key, value);
 			};
 			
@@ -54,7 +58,7 @@ RxEvent : Event {
 		};
 
     if (dispatch && updates.size > 0) {
-      this.dispatch(\updateObject, (id: this.id, object: this));
+      this.dispatch(\updateObject, (id: this.id, object: this, originalValues: originalVals));
     };
 	}
 
