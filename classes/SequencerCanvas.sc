@@ -95,6 +95,7 @@ SequencerCanvas {
 		canvas = UserView(parent, bounds);
 		canvas.resize = 5;
 		parent.acceptsMouseOver_(true);
+    [store, canvas].postln;
 
 		props = Props((
 			quantX: 100,

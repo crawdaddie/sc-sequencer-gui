@@ -1,4 +1,4 @@
-Seq : SortedList {
+Seq {
   classvar lastId = 1000;
   var <timeSeq;
   var <timeIndices;
@@ -8,17 +8,11 @@ Seq : SortedList {
 
   *new {
     // "new seq".postln;
-    ^super.new(8, { |a, b| a.time < b.time }).init()
+    ^super.new.init()
   }
   
   init {
-    // "new seq init".postln;
-    // timeSeq = SortedList(8, { arg a, b;
-    //   a.time < b.time
-    // });
-    // timeIndices = Dictionary();
-    // timeSeq = SortedList(8, { |a, b| a[0] < b[0]});
-    // Dictionary();
+    timeSeq = SortedList(8, { |a, b| a.time < b.time });
 
     Dispatcher.addListener(
       'updateObject',
@@ -44,7 +38,9 @@ Seq : SortedList {
   *from { arg events;
     var seq = super.new.init();
     events.do { arg event; seq.add(event, updateTimeSeq: false) };
-    this.updateTimeSeq;
+    // this.updateTimeSeq;
+    // seq.timeSeq.postln;
+
     ^seq;
   }
 
@@ -54,7 +50,7 @@ Seq : SortedList {
     obj.id = id;
 
     seqObj = RxEvent(obj);
-    this.put(id, seqObj);
+    timeSeq.add(seqObj);
     if (updateTimeSeq) {
       this.updateTimeSeq
     };
@@ -70,7 +66,7 @@ Seq : SortedList {
         eventsByTime[time] = evs.add(key);
       }
     };
-
+    
     eventsByTime.keysValuesDo { | time, events |
       timeline.add((time: time, events: events))
     };
